@@ -1,22 +1,30 @@
----
-title: "STAT 545B - Assignment B-1"
-output: github_document
-Roxygen: list(markdown = TRUE)
----
+STAT 545B - Assignment B-1
+================
 
-# Introduction 
+# Introduction
 
-The function which we are going to define is a particular function which can be used for plotting the proportion of missing and recorded values in each column of an R `tibble` object. 
+The function which we are going to define is a particular function which
+can be used for plotting the proportion of missing and recorded values
+in each column of an R `tibble` object.
 
-This function will product a column plot in ggplot (using the `ggplot2::geom_col` function) with one column in the plot for each of the selected columns in the R tibble.
+This function will product a column plot in ggplot (using the
+`ggplot2::geom_col` function) with one column in the plot for each of
+the selected columns in the R tibble.
 
 # Setup
 
-Because this function is designed to plot data from a `tibble` object, and it utilizes the `ggplot2` package to create the plots, we will need to import the `tidyverse` library, as it contains these two packages and some additional packages such as `tidyr` and `magrittr` which are helpful in working with tibbles. 
+Because this function is designed to plot data from a `tibble` object,
+and it utilizes the `ggplot2` package to create the plots, we will need
+to import the `tidyverse` library, as it contains these two packages and
+some additional packages such as `tidyr` and `magrittr` which are
+helpful in working with tibbles.
 
-In addition to the `tidyverse` family of packages, we will also utilize the `datateachr` package to give examples of the function which we define below, and we will use the `testthat` package to test whether the outputs of the function are as expected.
+In addition to the `tidyverse` family of packages, we will also utilize
+the `datateachr` package to give examples of the function which we
+define below, and we will use the `testthat` package to test whether the
+outputs of the function are as expected.
 
-```{r setup, warning = FALSE, message = FALSE}
+``` r
 library(tidyverse)
 library(datateachr)
 library(testthat)
@@ -24,15 +32,23 @@ library(testthat)
 
 # Function Definition
 
-In the following code chunk, we will use R to create the function which returns the desired plot. We will allow for certain levels of customizability in the function, including the following:
-- Selecting which columns from the dataset to have in the plot
-- Changing the colours of the bars corresponding to missing and recorded values
-- Changing the names of the bars which are shown in the legend
-- Additional customization options which can be passed to `ggplot2` (this is done using a `...` parameter)
+In the following code chunk, we will use R to create the function which
+returns the desired plot. We will allow for certain levels of
+customizability in the function, including the following: - Selecting
+which columns from the dataset to have in the plot - Changing the
+colours of the bars corresponding to missing and recorded values -
+Changing the names of the bars which are shown in the legend -
+Additional customization options which can be passed to `ggplot2` (this
+is done using a `...` parameter)
 
-In addition to the features described above, we will also define this function in a manner that lets us use the pipe to call this function, as opposed to requiring the dataset to be explicitly given to make this function run. This can be advantageous as we can combine calling this function with other features such as `mutate`, `join`, and `filter` functions. 
+In addition to the features described above, we will also define this
+function in a manner that lets us use the pipe to call this function, as
+opposed to requiring the dataset to be explicitly given to make this
+function run. This can be advantageous as we can combine calling this
+function with other features such as `mutate`, `join`, and `filter`
+functions.
 
-```{r function-definition}
+``` r
 #' @title Plot counts of missing and recorded values in each selected column
 #' 
 #' @details This function returns a stacked column plot which depicts the number of missing (`NA`) and recorded (not `NA`) observations in each specified column of a tibble.
@@ -110,93 +126,134 @@ plot_missing_observations <- function(.data, ..., cols = everything(),
 
 # Examples
 
-Now that we have defined the function, we can go through several examples of calling this function on an actual dataset to see how the parameters of this function affect the graphical outputs.
+Now that we have defined the function, we can go through several
+examples of calling this function on an actual dataset to see how the
+parameters of this function affect the graphical outputs.
 
-To do this, we will use the `apt_buildings` dataset from the `datateachr` R package.
+To do this, we will use the `apt_buildings` dataset from the
+`datateachr` R package.
 
-```{r get-dataset}
+``` r
 # Use datateachr to get a dataset
 apartments <- datateachr::apt_buildings
 ```
 
 ## Basic Function Call
 
-First, we will display an "elementary" call of this function, which uses all of the default parameters that are provided in the function and no additional graphical parameters.
+First, we will display an “elementary” call of this function, which uses
+all of the default parameters that are provided in the function and no
+additional graphical parameters.
 
-```{r example-1}
+``` r
 # Call the function by itself
 plot_missing_observations(apartments)
 ```
 
-We can see that the plot above shows the counts of missing and recorded values for each column in the `apt_buildings` dataset.
+![](Assignment-B-1_files/figure-gfm/example-1-1.png)<!-- -->
+
+We can see that the plot above shows the counts of missing and recorded
+values for each column in the `apt_buildings` dataset.
 
 ## Calling the Function with Pipes
 
-Next, we will display how we can use a pipe (`|>` or `%>%`) to call this function. Because the `|>` pipe is only available in newer R versions, we will use the `%>%` pipe from the `magrittr` library.
+Next, we will display how we can use a pipe (`|>` or `%>%`) to call this
+function. Because the `|>` pipe is only available in newer R versions,
+we will use the `%>%` pipe from the `magrittr` library.
 
-```{r example-2}
+``` r
 # Call the function with a pipe instead of passing .data as a parameter directly
 apartments %>%
   plot_missing_observations()
 ```
 
-The plot shown above looks identical to the first plot which was generated, even though the `plot_missing_observations` function was called using a pipe instead of as a "standalone" line of code.
+![](Assignment-B-1_files/figure-gfm/example-2-1.png)<!-- -->
+
+The plot shown above looks identical to the first plot which was
+generated, even though the `plot_missing_observations` function was
+called using a pipe instead of as a “standalone” line of code.
 
 ## Selecting Columns
 
-Next, we will look at subsetting columns of the data with the `cols` parameter. We will select only the columns which contain numeric data, and we will call this function on that subset of the `apt_buildings` dataset.
+Next, we will look at subsetting columns of the data with the `cols`
+parameter. We will select only the columns which contain numeric data,
+and we will call this function on that subset of the `apt_buildings`
+dataset.
 
-```{r example-3}
+``` r
 # Select a subset of the columns
 plot_missing_observations(apartments, cols = where(is.numeric))
 ```
 
+![](Assignment-B-1_files/figure-gfm/example-3-1.png)<!-- -->
+
 ## Renaming the bars in the legend
 
-Using the `count_names` parameter, we can rename the bars in the legend from their default names ("Missing" and "Recorded") to a different set of names.
+Using the `count_names` parameter, we can rename the bars in the legend
+from their default names (“Missing” and “Recorded”) to a different set
+of names.
 
-```{r example-4}
+``` r
 # Change the names for the bars which are displayed in the legend
 plot_missing_observations(apartments, count_names = c("No", "Yes"))
 ```
 
+![](Assignment-B-1_files/figure-gfm/example-4-1.png)<!-- -->
+
 ## Changing the colours of the bars
 
-Using the `bar_colours` parameter, we can change the colours of the bars. We can use hex codes (as shown below) or default colour names `to declare these colours.
+Using the `bar_colours` parameter, we can change the colours of the
+bars. We can use hex codes (as shown below) or default colour names \`to
+declare these colours.
 
-```{r example-5}
+``` r
 # Change the colours of the bars
 plot_missing_observations(apartments, bar_colours = c("#3838F8", "#F89838"))
 ```
-## Using the ellipses 
 
-We can use the ellipses to pass additional arguments into `ggplot2` when we are creating the plots. Two possible examples of additional ggplot parameters which we can add to the plot are a theme, and renaming the axes, legend, and title.
+![](Assignment-B-1_files/figure-gfm/example-5-1.png)<!-- --> \## Using
+the ellipses
 
-```{r example-6}
+We can use the ellipses to pass additional arguments into `ggplot2` when
+we are creating the plots. Two possible examples of additional ggplot
+parameters which we can add to the plot are a theme, and renaming the
+axes, legend, and title.
+
+``` r
 # Use additional arguments to change things in the plot
 plot_missing_observations(apartments, theme_classic(), 
                           labs(x = "Variable Name", y = "Number of Rows", fill = "Blank?",
                                title = "Missing Values per Column"))
 ```
 
+![](Assignment-B-1_files/figure-gfm/example-6-1.png)<!-- -->
+
 ## Throwing errors
 
-The function which we defined only works when the dataset provided is a tibble, and when the `count_names` and `bar_colours` variables both have precisely 2 elements. 
+The function which we defined only works when the dataset provided is a
+tibble, and when the `count_names` and `bar_colours` variables both have
+precisely 2 elements.
 
-Before the function creates the plots, we first check that these three requirements are all satisfied, and the function throws an error if any of these conditions are violated.
+Before the function creates the plots, we first check that these three
+requirements are all satisfied, and the function throws an error if any
+of these conditions are violated.
 
-```{r example-7, error = TRUE}
+``` r
 # Call the function with 3 count_names. This should throw an error.
 plot_missing_observations(apartments, count_names = c("Missing", "Recorded", "Quantum Superposition"))
 ```
 
-We see that this call to our function throws an error, which is good, as the `count_names` vector provided had 3 values instead of 2. 
+    ## Error in plot_missing_observations(apartments, count_names = c("Missing", : The names for the counts data must have exactly two values. You provided a list of 3 names instead.
+
+We see that this call to our function throws an error, which is good, as
+the `count_names` vector provided had 3 values instead of 2.
 
 ## Putting it all together
 
-Finally, we can combine the many features shown above to have a wide range of customization in the plots which are generated by this function. 
+Finally, we can combine the many features shown above to have a wide
+range of customization in the plots which are generated by this
+function.
 
-```{r example-8}
+``` r
 # Use all the features at once
 apartments %>%
   plot_missing_observations(theme_classic(), 
@@ -208,15 +265,22 @@ apartments %>%
                             bar_colours = c("#3838F8", "#F89838"))
 ```
 
+![](Assignment-B-1_files/figure-gfm/example-8-1.png)<!-- -->
+
 # Function Testing
 
-Now that we have seen an overview of the capabilities of the function, we can use the `testthat` library to ensure that the outputs of the function are as expected.
+Now that we have seen an overview of the capabilities of the function,
+we can use the `testthat` library to ensure that the outputs of the
+function are as expected.
 
 ## Testing for Thrown Errors
 
-First, we will test that the function gives an error whenever any of the three required conditions of the function (`.data` is a tibble, `count_names` has two values, `bar_colours` has two values) are violated.
+First, we will test that the function gives an error whenever any of the
+three required conditions of the function (`.data` is a tibble,
+`count_names` has two values, `bar_colours` has two values) are
+violated.
 
-```{r test-function-1}
+``` r
 test_that("Function throws errors when the conditions are violated", {
   # .data is not a tibble
   expect_error(plot_missing_observations(as.data.frame(apartments)))
@@ -237,13 +301,21 @@ test_that("Function throws errors when the conditions are violated", {
                                          bar_colours = c("red", "green", "white")))
 })
 ```
+
+    ## Test passed 🥇
+
 ## Testing for Altering the Dataset
 
-Next, we will test whether the function alters the dataset `.data` which is a parameter of the function. We will test whether the function alters the dataset when we pass `.data` as a parameter directly, and when we call our function using the pipe.
+Next, we will test whether the function alters the dataset `.data` which
+is a parameter of the function. We will test whether the function alters
+the dataset when we pass `.data` as a parameter directly, and when we
+call our function using the pipe.
 
-To test whether the data is altered by our function, we will use a new dataset called `flow_sample`, which is also from the `datateachr` library.
+To test whether the data is altered by our function, we will use a new
+dataset called `flow_sample`, which is also from the `datateachr`
+library.
 
-```{r test-function-2}
+``` r
 # Get three copies of the flow_sample dataset from datateachr
 flow_1 <- datateachr::flow_sample # Passed directly as a parameter to the function
 flow_2 <- datateachr::flow_sample # Piped into the function
@@ -264,13 +336,19 @@ test_that("Using the function does not alter the actual dataset", {
 })
 ```
 
+    ## Test passed 🎊
+
 ## Test that `cols` and `...` yield expected results
 
-Lastly, we are going to test that the `cols` parameter and additional graphical parameters passed to `...` provide the same results as if we were to use `select` and add additional graphical parameters to the plot manually after the function returns.
+Lastly, we are going to test that the `cols` parameter and additional
+graphical parameters passed to `...` provide the same results as if we
+were to use `select` and add additional graphical parameters to the plot
+manually after the function returns.
 
-To do this, we will use the `steam_games` dataset, which is also from the `datateachr` library.
+To do this, we will use the `steam_games` dataset, which is also from
+the `datateachr` library.
 
-```{r test-function-3}
+``` r
 steam <- datateachr::steam_games
 
 # Create a plot using select and adding additional graphics manually
@@ -306,3 +384,5 @@ test_that("The two plots which are generated are the same", {
   expect_equal(steam_missing_obs_1$data, steam_missing_obs_2$data)
 })
 ```
+
+    ## Test passed 🎊
