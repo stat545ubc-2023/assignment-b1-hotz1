@@ -336,7 +336,7 @@ test_that("Using the function does not alter the actual dataset", {
 })
 ```
 
-    ## Test passed 🎊
+    ## Test passed 🥳
 
 ## Test that `cols` and `...` yield expected results
 
@@ -385,4 +385,4 @@ test_that("The two plots which are generated are the same", {
 })
 ```
 
-    ## Test passed 🎊
+    ## Test passed 🥇
